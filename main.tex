@@ -1,0 +1,59 @@
+\documentclass[preprint,12pt]{elsarticle}
+%% preamble
+\input{preamble}
+
+%% title information
+\title{\large{Qualcomm Innovation Fellowship
+Proposal on:}\\
+\Large\tb{Learning to guide a optimal motion planner}
+}
+\author{
+        \small Bruno Brito\\
+        \small Cognitive Robotics Department\\
+        \small TU Delft\\
+        }
+%\date{\normalsize March 8, 2018} %to fix the date
+
+%% document
+\begin{document}
+%% title
+\maketitle
+%% foreword
+
+%% sections
+%% introduction
+\section{Introduction and Problem Definition}
+% paragraph describing the social problem and presenting the actual state of autonomous driving technologies
+Only in 2016, there were more than 6 millions of car accidents, of which around 36 thousand resulted in a fatality \cite{HighwayTraffic2017}.Moreover, approximately 94\% of the crashes were due to human error \cite{Singh2015}. Autonomous vehicles can have a major impact reducing the influence of human error on the number of vehicle collisions.
+
+Nevertheless, current autonomous systems are limited to relatively low speeds, well-constrained and clutter-free environments. For instance, Tesla has released an ”Autopilot feature”, which works only in highways (low complexity) and under good road conditions.
+Amazon automates its warehouses with hundreds of mobile robots \cite{wurman2008coordinating}, but in a controlled environment where humans cannot enter.
+
+In a near future, autonomous vehicles will provide mobility on-demand, autonomous transportation, environmental monitoring, etc.  Mobile robots will have to interact with humans, share their environment and be socially accepted. 
+
+State-of-art (SoA) motion planners avoid collisions with dynamics obstacles through replanning [], repulsive fields or assume a simplified prediction model of the other agents and plan over a prediciton horizon. The first and second lead to reactive behaviors. The last, even if perfect predictions are provided such planner may  fail on cluttered environments. The reason is the inability of the planner to account for interaction, a problem also know as the Freezing Robot Problem (FRP).
+
+Deep learning methods have recently shown great performance learning models from data. Several works proposed different deep learning methods to model the human motion \cite{Pfeiffer2017} and its uncertainty \cite{social-gan}. However, such approaches only model human-human interactions not allowing to predict the human behavior
+
+%This fact led continued development of advanced safety systems, for instance, automatic brake in the case of unexpected obstacles \cite{nohmi1978automatic}, maintain a car in a lane at a given speed, and alert users of pedestrians, signage, and other vehicles on the roadway [6].
+
+
+
+\input{sec/related_work.tex}
+
+
+\input{sec/research_questions.tex}
+
+%% references
+\\
+\bibliographystyle{elsarticle-harv} 
+\bibliography{ref}
+
+
+%% appendix
+
+% \section*{Appendix}
+% research tree
+
+
+\end{document}

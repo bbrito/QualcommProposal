@@ -1,0 +1,95 @@
+\section{Approach} \label{approach}
+In Figure \ref{fig:research_tree} can be found my proposed research tree, covering all the modules that I pretend to develop during my Ph.D. In green are represented the modules that I am developing during the first year, in red the modules that I will not research, and finally in blue the modules that I pretend to develop during my Ph.D.
+
+\subsection{Interactive Motion planning}
+
+\textbf{Current state:}
+As stated in Section \ref{summary}, part of my first year of research was devoted to the real-world application, evaluation, and modifications to the MPCC scheme proposed by Wilko \cite{Schwarting2017} in order to test it in a human urban environment. The next step consists of the implementation and testing of a real autonomous vehicle. One of the key conclusions obtained so far is that the kinematic model used in the MPC is too inaccurate for vehicle velocities over 80 km/h resulting in the control loss of the vehicle. 
+
+\textbf{Goal:}
+Similarly to \cite{Lenz2015} and \cite{rl-nmpc}, I propose to deep learning to learn a high-fidelity model. A prediction error between the kinematic and the learned model can then be computed and feedback to the MPC controller which must compensate for it.
+
+Result: Deep Robust MPC for high-speed maneuvers
+
+\subsection{Motion prediction}
+Taking into account the work already done as described in Section \ref{summary}, the goal is to keep researching deep learning models to:
+
+\begin{enumerate}
+\item model the multimodal behavior of the human motion
+\item account for the agent motion plans on the predictions
+\item model the other agents interaction effects
+\item generate feasible trajectories
+\end{enumerate}
+
+For the first goal, I pretend to use a Generative Adversarial Network (GAN), similar to \cite{social-gan}. I propose to use the current DNN architecture as a generator and an FCL as a discriminator. In contrast to \cite{social-gan} the discriminator will not only classify the generator trajectories as socially acceptable but also as feasible or not. This is a novel approach. So far, no work in the literature dealt with the question of feasibility of trajectory prediction.
+
+In order to better capture the interaction between the agents I propose to use an attention mechanism, like \cite{social-attention}.
+
+Finally, in order to account for the ego-agent motion plans, I will generate a new dataset with a mobile robot navigating in a human environment using the developed MPC. The dataset will contain the other agents trajectories and the robot motion plans. The network architecture will then be extended with another RNN fed with the robot motions plans, following a hierarchical approach \cite{ss-lstm}.
+
+\begin{figure}[h]
+    \centering 
+    \includegraphics[width=\textwidth]{figs/system_architecture.png}
+    \caption{Safe navigation in human environment planner architecture}
+    \label{fig:init_architecture}
+\end{figure}
+
+\subsection{Intention recognition}
+
+\textbf{Current state:}
+I will begin my research using as baseline the Joint Multi-Policy Behavior Estimation based on POMDPs combined with an MPC developed by \citeauthor{Zhou}. The first objective is to implement and evaluate his work on a real robotic platform. At the moment the following drawbacks can be identified from this work:
+\begin{enumerate}
+\item Only a limited and discrete set of possible actions for the agents is used in order to solve the problem online
+\item Several assumptions are taken by considering a well-constrained scenario
+\item Despite all simplifications, the processing time is still slow for autonomous driving
+\end{enumerate}
+
+For instance, autonomous boats are less constrained on their navigation. Multi-hypothesis situations like over-passing an obstacle through the left or right can arise and lead to unstable switching behaviors.
+
+Because one of the main goals of this research is to develop safe motion planners I am not going to use an end-to-end approach. I still consider these approaches combined with other techniques for which I can give proofs of safety. For instance, \citeauthor{Lenz2017} compared different deep neural networks architectures for motion prediction in a highway entrance scenario applicable to planning methods based on POMDP's. In Figure \ref{fig:init_architecture} it can be seen my initial proposal to continue \citeauthor{Zhou} work.
+
+\begin{figure}[h]
+	\centering 
+	\includegraphics[width=\textwidth]{figs/system_architecture1.png}
+	\caption{Deep POMDP architecture}
+	\label{fig:init_architecture}
+\end{figure}
+
+%Concerning the drawbacks presented I will focus my initial research on:
+%\begin{enumerate}
+%\item Deep neural networks structures for trajectory prediction \cite{Alahi2016}, %\citep{Lenz2017}
+%\item Continuous representation of trajectories such as Gaussian processes, braid groups %or homotopy classes  \cite{Mavrogiannis2017} \cite{Kretzschmar2016}
+%\item Faster techniques to replace the particle filter for belief state propagation
+%\end{enumerate}
+
+\subsection{Global guidance}
+Looking at Figure \ref{fig:init_architecture} we can observe that both motion planning and decision-making problems are solved by the Multipolicy NMPC which makes it computationally expensive. The main goals to achieve with a global guidance algorithm are twofold: 
+
+\begin{enumerate}
+    \item to remove the decision-making process from the MPC planner
+    \item to warm-start the MPC with trajectories from data-driven models \cite{mansard}
+\end{enumerate}
+
+Looking at section \ref{bahevior_based} there are several techniques dealing with decision-making problems for social-aware motion planning.  For instance, \citeauthor{Chen2017b} used a combination of RL with Deep Learning, \citeauthor{Kretzschmar2016} used IRL and \citeauthor{Lenz2016} used MCTS.
+However, none of these approaches can ensure safety or collision avoidance. \tb{I pretend to closely investigate these methods and use them to solve the decision-making process by generating socially intuitive trajectories as global guidance to the MPC planner}. Moreover, the DNN models discussed in the previous section can also be used to learn navigation behavior from demonstrations and thus be used as trajectory generators to warm-start our motion planner.
+
+In addition, \tb{I want to search for other variants of the NMPC such as DeepMPC} \cite{Lenz2015} scenario-based MPC \cite{Schildbach2015}, iterative Linear Quadratic Gaussian (iLQG) \citet{Todorov} and \citeauthor{Mukadam2017} et. all. in order to achieve faster and stable motion plans. 
+
+It is important to highlight that in this phase I will consider only offline learning methods and so its performance will be constant over time, which leads me to my next approach.
+
+\subsection{Online learning}
+
+First, we need to define what are the performance indicators/metrics in order to perform such an analysis. A possible measure which should be taken into account are the following:
+\begin{itemize}
+        \item time (travel time)
+        \item path length
+        \item safety margin/min distance to collision
+        \item computational complexity (planning time, memory,)   
+\end{itemize}
+
+Here, I will investigate how I can use online learning techniques in a safe manner, allowing the planner to learn with its mistakes over time. More specifically, I will focus my research on Deep RL techniques like DQN \cite{mnih2015human}, Dueling DQN \cite{Wang2015} combined with constrained optimization to ensure safe learning over time \cite{Achiam2017}.
+In addition, I will also investigate about knowledge transfer between vehicles. Only recently a few research works were presented in this field but applied for robot manipulation \cite{Costante2015} and \cite{Shukla2015}. 
+
+\subsection{Experiments}
+
+In parallel to the development of novel planning techniques, it is intended to validate them in practice. The techniques will be implemented, tested and validated not only in simulations but also on real hardware. First tests will be carried out on the Jackal mobile platform. I will consider indoor and outdoor scenarios. It is also expected to perform some experiments on a car and boat from partners connected to this project, DAVI group, and Waternet respectively.
